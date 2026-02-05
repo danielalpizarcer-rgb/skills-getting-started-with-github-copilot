@@ -25,6 +25,12 @@ document.addEventListener("DOMContentLoaded", () => {
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+
+          <div class="participants-section" aria-live="polite">
+            <h5 class="participants-title">Participants</h5>
+            <ul class="participants-list" aria-label="Participants for ${name}"></ul>
+            <p class="no-participants info ${details.participants.length ? "hidden" : ""}">No participants yet</p>
+          </div>
         `;
 
         activitiesList.appendChild(activityCard);
@@ -34,6 +40,20 @@ document.addEventListener("DOMContentLoaded", () => {
         option.value = name;
         option.textContent = name;
         activitySelect.appendChild(option);
+
+        // Populate participants list
+        const participantsUl = activityCard.querySelector(".participants-list");
+        const noParticipantsP = activityCard.querySelector(".no-participants");
+        if (details.participants && details.participants.length) {
+          details.participants.forEach((email) => {
+            const li = document.createElement("li");
+            li.textContent = email;
+            participantsUl.appendChild(li);
+          });
+          noParticipantsP.classList.add("hidden");
+        } else {
+          noParticipantsP.classList.remove("hidden");
+        }
       });
     } catch (error) {
       activitiesList.innerHTML = "<p>Failed to load activities. Please try again later.</p>";
